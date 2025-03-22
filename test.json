@@ -1,0 +1,78 @@
+{
+    "MPage": false,
+    "cmpCtx": "",
+    "parms": [
+        "WEEE0040",
+        "Simple document search",
+        {
+            "SEARCH_KEY_WORD": "",
+            "CONTAIN_FUND": true,
+            "SYORUI_SYUBETU": "120,130,140,150,160,170,350,360,010,020,030,040,050,060,070,080,090,100,110,135,136,200,210,220,230,235,236,240,250,260,270,280,290,300,310,320,330,340,370,380,180,190,",
+            "KESSAN_NEN": "",
+            "KESSAN_TUKI": "",
+            "TEISYUTU_FROM": "20240321",
+            "TEISYUTU_TO": "20250321",
+            "FLS": true,
+            "LPR": true,
+            "RPR": true,
+            "OTH": true,
+            "TEISYUTU_KIKAN": 6
+        },
+        2,
+        2,
+        100,
+        {
+            "SaitoKubun": "",
+            "SennimotoId": "WEEE0040",
+            "SdtYuzaJoho": {
+                "YuzaId": "",
+                "EdinetKodo": "",
+                "Yuzamei": "",
+                "KengenKodo": "",
+                "ZaimukyokuKodo": "",
+                "SaishuRoguinJikan": "0000-00-00T00:00:00",
+                "KoshinJikan": "0000-00-00T00:00:00",
+                "Pasuwadojotai": "",
+                "SaishuPasuwadokoshin": "0000-00-00T00:00:00",
+                "SakujoFuragu": "",
+                "Roguinshippaikaisu": 0,
+                "RoguinFLG": "",
+                "GamUserGUID": ""
+            }
+        },
+        "1",
+        false,
+        [
+            {
+                "Message": "EE0009E ：There are more than 3000 results. Please refine your search criteria and try again.",
+                "MessageId": "EE0009E",
+                "MessageLevel": "ERR"
+            }
+        ],
+        82418
+    ],
+    "hsh": [
+        {
+            "hsh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJneC1pc3N1ZXIiOiIiLCJneC1wZ20iOiJXRUVFMDA0MCIsImd4LXZhbCI6IldFRUUwMDQwIiwiZ3gtZXhwIjoiMTc0Mzg0NDc2MS43MTkxNCIsIm5iZiI6MTc0MjUxNjM2MSwiZXhwIjoxNzQzODEyMzYxLCJpYXQiOjE3NDI1MTYzNjF9.SNh6a1yS7rCWgXaca_DCHXrKODcoOw7gMJ-7WaJ8yeg",
+            "row": ""
+        },
+        {
+            "hsh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJneC1pc3N1ZXIiOiIiLCJneC1wZ20iOiJXRUVFMDA0MCIsImd4LXZhbCI6IlNpbXBsZSBkb2N1bWVudCBzZWFyY2giLCJneC1leHAiOiIxNzQzODQ0NzYxLjcxOTE0IiwibmJmIjoxNzQyNTE2MzYxLCJleHAiOjE3NDM4MTIzNjEsImlhdCI6MTc0MjUxNjM2MX0.8lP1dBH3asdYPrzNn52d7i3NwmBZMfnTLEpfWJZYW-o",
+            "row": ""
+        },
+        {
+            "hsh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJneC1pc3N1ZXIiOiIiLCJneC1wZ20iOiJXRUVFMDA0MCIsImd4LXZhbCI6IjEwMCIsImd4LWV4cCI6IjE3NDM4NDQ3NjEuNzE5MTQiLCJuYmYiOjE3NDI1MTYzNjEsImV4cCI6MTc0MzgxMjM2MSwiaWF0IjoxNzQyNTE2MzYxfQ.YwkijDx3LS1ylnILax-WaE3OYg1XDNzRxx2vt3xoAOI",
+            "row": ""
+        },
+        {
+            "hsh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJneC1pc3N1ZXIiOiIiLCJneC1wZ20iOiJXRUVFMDA0MCIsImd4LXZhbCI6IjEiLCJneC1leHAiOiIxNzQzODQ0NzYxLjcxOTE0IiwibmJmIjoxNzQyNTE2MzYxLCJleHAiOjE3NDM4MTIzNjEsImlhdCI6MTc0MjUxNjM2MX0.5u23oeLP5PCxFN-Vf_ecjs6RQf2TZD9KOJ9BfaRPNew",
+            "row": ""
+        }
+    ],
+    "objClass": "weee0040",
+    "pkgName": "GeneXus.Programs",
+    "events": [
+        "'DOBTN_PAGER'"
+    ],
+    "grids": {}
+}

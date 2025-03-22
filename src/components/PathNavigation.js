@@ -232,6 +232,16 @@ const PathNavigation = ({
     <div className="path-navigation" ref={navigationRef}>
       <div className="navigation-container">
         <div className="navigation-sections">
+          {/* 현재 글로벌 타겟 헤더 표시 - 채널 앞에 위치 */}
+          {selectedHeader && (
+            <div className="nav-section current-header">
+              <div className="nav-section-button header-indicator">
+                <div className="nav-section-label">헤더:</div>
+                <div className="nav-section-value header-value">{selectedHeader}</div>
+              </div>
+            </div>
+          )}
+
           <div className="nav-section" style={{ flex: '1 1 auto' }}>
             {renderChannelPath()}
           </div>

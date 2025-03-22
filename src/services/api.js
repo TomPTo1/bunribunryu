@@ -138,7 +138,7 @@ export const fetchHeaderCombinationList = async (channel, headers) => {
 export const fetchCombinations = fetchHeaderCombinationList;
 
 // Fetch header combination text list
-export const fetchHeaderCombinationTextList = async (channel, headerGroups, size = 100, afterKey = '') => {
+export const fetchHeaderCombinationTextList = async (channel, headerGroups, size = 1000, afterKey = '') => {
   try {
     const data = JSON.stringify({
       size,

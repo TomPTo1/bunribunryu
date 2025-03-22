@@ -1,0 +1,31 @@
+.browse-mode-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background-color: #f5f5f5;
+  /* This ensures that the container adapts when children change size */
+  overflow: hidden; /* Prevent scrolling at the container level */
+}
+
+/* Remove the .column styling as FileExplorerColumn and WorkspaceColumn have their own specific styling */
+
+/* 
+The following styles are removed as they interfere with the collapsible behavior:
+.column {
+  padding: 16px;
+  overflow-y: auto;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  margin: 8px;
+  border-radius: 8px;
+}
+
+.column:nth-child(1) {
+  flex: 1;
+  min-width: 200px;
+}
+
+.column:nth-child(2) {
+  flex: 3;
+}
+*/

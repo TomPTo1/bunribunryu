@@ -1,20 +1,40 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { fetchHeaderCombinationList } from '../services/api';
-import MiningView from './MiningView';
 import './Column.css';
 
-const HeaderCombinationList = ({ channel, selectedHeader, onCombinationSelect, selectedCombination, onHeaderSearch, onHeaderSimilarityRequest }) => {
+const HeaderCombinationList = ({ 
+  channel, 
+  selectedHeader, 
+  onCombinationSelect, 
+  selectedCombination, 
+  onHeaderSearch, 
+  onHeaderSimilarityRequest,
+  onMultipleCombinationsSelect
+}) => {
   const [combinationHeaders, setCombinationHeaders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('combination'); // 'combination' or 'mining'
   const [testMode, setTestMode] = useState(false); // Add test mode state
+  // 선택된 여러 조합들을 위한 state 추가
+  const [selectedCombinations, setSelectedCombinations] = useState([]);
   
   // New state for filtering and sorting
   const [uniqueItems, setUniqueItems] = useState([]);
   const [activeFilters, setActiveFilters] = useState([]);
   const [excludedFilters, setExcludedFilters] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  // Initialize selectedCombinations when selectedCombination changes
+  useEffect(() => {
+    if (selectedCombination) {
+      if (!selectedCombinations.includes(selectedCombination)) {
+        setSelectedCombinations([selectedCombination]);
+      }
+    } else {
+      setSelectedCombinations([]);
+    }
+  }, [selectedCombination]);
 
   useEffect(() => {
     const getCombinationHeaders = async () => {
@@ -83,9 +103,33 @@ const HeaderCombinationList = ({ channel, selectedHeader, onCombinationSelect, s
     setUniqueItems(sortedItems);
   }, [combinationHeaders]);
 
+  // 수정된 handleCombinationClick 함수 - 다중 선택 지원
   const handleCombinationClick = (combination) => {
+    // Check if the combination is already selected
+    const isSelected = selectedCombinations.includes(combination);
+    
+    // Update the selectedCombinations array
+    let newSelectedCombinations;
+    if (isSelected) {
+      // If already selected, remove it from selection
+      newSelectedCombinations = selectedCombinations.filter(comb => comb !== combination);
+    } else {
+      // If not selected, add it to selection
+      newSelectedCombinations = [...selectedCombinations, combination];
+    }
+    
+    // Update state
+    setSelectedCombinations(newSelectedCombinations);
+    
+    // Keep the original onCombinationSelect for backward compatibility
+    // But only send the first selected combination or null if empty
     if (onCombinationSelect) {
-      onCombinationSelect(combination);
+      onCombinationSelect(newSelectedCombinations.length > 0 ? newSelectedCombinations[0] : null);
+    }
+    
+    // 부모 컴포넌트에 여러 선택 목록 전달
+    if (onMultipleCombinationsSelect) {
+      onMultipleCombinationsSelect(newSelectedCombinations);
     }
   };
 
@@ -99,6 +143,7 @@ const HeaderCombinationList = ({ channel, selectedHeader, onCombinationSelect, s
       onHeaderSearch(header);
     }
     
+    // 유사헤더 보기 요청 처리
     if (onHeaderSimilarityRequest) {
       onHeaderSimilarityRequest(header);
     }
@@ -153,7 +198,13 @@ const HeaderCombinationList = ({ channel, selectedHeader, onCombinationSelect, s
     
     const headers = headerGroup.split('|');
     return (
-      <div className="header-tags">
+      <div className="header-tags" style={{ 
+        textAlign: 'right',
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'flex-end',
+        width: '100%'
+      }}>
         {headers.map((header, index) => {
           const isActive = activeFilters.includes(header);
           const isExcluded = excludedFilters.includes(header);
@@ -163,6 +214,7 @@ const HeaderCombinationList = ({ channel, selectedHeader, onCombinationSelect, s
             <span 
               key={index} 
               className={className}
+              style={{ margin: '0 2px', display: 'inline-block' }}
               onClick={(e) => {
                 e.stopPropagation(); // Don't trigger parent's click
                 toggleCombinationTagFilter(header); // Use the simple toggle for combination list
@@ -237,9 +289,7 @@ const HeaderCombinationList = ({ channel, selectedHeader, onCombinationSelect, s
     <div className="column-container">
       <div className="column-title-container">
         <h2 className="column-title">
-          {!testMode && selectedHeader 
-            ? `헤더명 조합 목록: ${selectedHeader}` 
-            : '헤더명 조합 목록'}
+          {!testMode ? '헤더명 조합 목록' : '헤더명 조합 목록'}
         </h2>
         <div className="test-mode-toggle">
           <label className="toggle-label">
@@ -254,37 +304,32 @@ const HeaderCombinationList = ({ channel, selectedHeader, onCombinationSelect, s
         </div>
       </div>
       
-      <div className="tabs">
-        <button 
-          className={`tab ${activeTab === 'combination' ? 'active' : ''}`}
-          onClick={() => setActiveTab('combination')}
-        >
-          조합뷰
-        </button>
-        <button 
-          className={`tab ${activeTab === 'mining' ? 'active' : ''}`}
-          onClick={() => setActiveTab('mining')}
-        >
-          마이닝뷰
-        </button>
-      </div>
-      
       {activeTab === 'combination' ? (
         <div className="tab-content">
           {/* Filter controls */}
           <div className="filter-section">
             <div className="filter-header" onClick={() => setIsFilterOpen(!isFilterOpen)}>
               <div className="filter-title">
-                <h3>태그 필터 {activeFilters.length > 0 || excludedFilters.length > 0 ? `(${activeFilters.length + excludedFilters.length})` : ''}</h3>
+                <h3>태그 필터</h3>
+                {activeFilters.length > 0 || excludedFilters.length > 0 ? (
+                  <span className="filter-results-count">
+                    {activeFilters.length + excludedFilters.length}개 적용
+                  </span>
+                ) : null}
+              </div>
+              
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                {filteredAndSortedCombinations.length > 0 && (
+                  <span className="search-result-count">
+                    {filteredAndSortedCombinations.length}
+                    {combinationHeaders.length !== filteredAndSortedCombinations.length ? 
+                      `/${combinationHeaders.length}` : ''}
+                  </span>
+                )}
                 <button className="filter-toggle-btn">
                   {isFilterOpen ? '▲' : '▼'}
                 </button>
               </div>
-              {filteredAndSortedCombinations.length > 0 && (
-                <span className="filter-results-count">
-                  {filteredAndSortedCombinations.length}개 조합 {combinationHeaders.length !== filteredAndSortedCombinations.length ? `(전체 ${combinationHeaders.length}개 중)` : ''}
-                </span>
-              )}
             </div>
             
             {isFilterOpen && (
@@ -321,17 +366,16 @@ const HeaderCombinationList = ({ channel, selectedHeader, onCombinationSelect, s
             )}
           </div>
           
-          {/* Results display */}
-          {loading ? (
-            <div className="loading">로딩 중...</div>
-          ) : error ? (
-            <div className="error">에러: {error}</div>
-          ) : filteredAndSortedCombinations.length > 0 ? (
-            <div className="column-content">
-              {filteredAndSortedCombinations.map((item, index) => (
-                <div
-                  key={index}
-                  className={`column-item ${selectedCombination === item.header_group ? 'selected' : ''}`}
+          <div className="column-content">
+            {loading ? (
+              <div className="loading">로딩 중...</div>
+            ) : error ? (
+              <div className="error">에러: {error}</div>
+            ) : filteredAndSortedCombinations.length > 0 ? (
+              filteredAndSortedCombinations.map((item, index) => (
+                <div 
+                  key={index} 
+                  className={`column-item ${selectedCombinations.includes(item.header_group) ? 'selected' : ''}`}
                   onClick={() => handleCombinationClick(item.header_group)}
                 >
                   <div className="item-count-badge">
@@ -339,27 +383,47 @@ const HeaderCombinationList = ({ channel, selectedHeader, onCombinationSelect, s
                   </div>
                   {renderHeaderGroupAsTags(item.header_group)}
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="column-empty">
-              {activeFilters.length > 0 || excludedFilters.length > 0 ? (
-                "필터 조건에 맞는 결과가 없습니다."
-              ) : testMode ? (
-                "테스트 모드가 활성화되었습니다."
-              ) : (
-                "채널과 헤더를 선택해주세요."
-              )}
-            </div>
-          )}
+              ))
+            ) : (
+              <div className="column-empty">
+                {activeFilters.length > 0 || excludedFilters.length > 0 ? (
+                  "필터 조건에 맞는 결과가 없습니다."
+                ) : testMode ? (
+                  "테스트 모드가 활성화되었습니다."
+                ) : (
+                  "채널과 헤더를 선택해주세요."
+                )}
+              </div>
+            )}
+          </div>
         </div>
       ) : (
-        <MiningView 
-          combinationHeaders={combinationHeaders}
-          loading={loading}
-          error={error}
-          testMode={testMode}
-        />
+        <div className="tab-content mining-view">
+          <div className="mining-view-placeholder">
+            마이닝 기능이 HeaderCombinationTextList로 이동되었습니다.
+          </div>
+        </div>
+      )}
+      
+      <div className="tabs">
+        <button 
+          className={`tab ${activeTab === 'combination' ? 'active' : ''}`}
+          onClick={() => setActiveTab('combination')}
+        >
+          전체
+        </button>
+        <button 
+          className={`tab ${activeTab === 'mining' ? 'active' : ''}`}
+          onClick={() => setActiveTab('mining')}
+        >
+          미처리
+        </button>
+      </div>
+      {/* 선택된 조합 수 표시 */}
+      {selectedCombinations.length > 0 && (
+        <div className="selected-combinations-indicator">
+          선택된 조합: {selectedCombinations.length}개
+        </div>
       )}
     </div>
   );
